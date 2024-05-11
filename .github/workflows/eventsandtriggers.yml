@@ -10,7 +10,7 @@ on:
     types:
       - opened
     branches:
-      - 'feat/**'
+      - 'main'
 
   workflow_dispatch:
 
