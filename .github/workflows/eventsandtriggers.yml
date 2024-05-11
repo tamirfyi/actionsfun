@@ -6,6 +6,12 @@ on:
       - 'main'
       - 'feat/**'
 
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'feat/**'
+
   workflow_dispatch:
 
 jobs:
