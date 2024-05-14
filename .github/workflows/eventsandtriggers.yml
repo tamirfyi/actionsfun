@@ -1,0 +1,23 @@
+name: basic
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feat/**'
+
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'main'
+
+  workflow_dispatch:
+
+jobs:
+  triggers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: hello world
+        run: echo "hello world"
