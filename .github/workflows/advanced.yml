@@ -70,6 +70,7 @@ jobs:
           name: output-log-file
           path: output.log
   download-artifact:
+    needs: create-artifact
     runs-on: ubuntu-latest
     steps:
       - name: download artifact
