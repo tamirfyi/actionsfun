@@ -1,5 +1,14 @@
-name: basic
+# A runner is a server that runs your workflow when they are triggered
 
+# Name your workflow
+name: events-and-triggers-workflow
+
+run-name: ${{ github.actor }} is learning action events and triggers
+
+# Define event triggers
+# - events can originate from github
+# - events can also run on a schedule
+# - events can be triggered via a REST API
 on:
   push:
     branches:
@@ -12,12 +21,29 @@ on:
     branches:
       - 'main'
 
+  # special event to allow you to manually run an action
   workflow_dispatch:
 
+# A job is a set of steps in a workflow executed on the same runner
+# - each step is either a shell script or action
+# - steps are executed in order and depend on each other
+# by default they have no dependencies and run in parallel
+# - can share data from one step to another (using needs: <job name>)
 jobs:
-  triggers:
+  hello-world:
     runs-on: ubuntu-latest
     steps:
+      # an action is a custom application for gh actions that performs complex but frequent task
       - uses: actions/checkout@v4
       - name: hello world
         run: echo "hello world"
+  check-bats-version:
+    runs-on: ubuntu-latest # specify image for job
+    steps:
+      - uses: actions/checkout@v4
+      # this action sets up nodejs on the runner
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm i -g bats
+      - run: bats -v
