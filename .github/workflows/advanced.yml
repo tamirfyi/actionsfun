@@ -70,10 +70,24 @@ jobs:
           name: output-log-file
           path: output.log
   download-artifact:
-    needs: create-artifact
+    needs: create-artifact # in order for artifacts to work, you need to establish a dependency between jobs
     runs-on: ubuntu-latest
+    env:
+      MY_NULL: ${{ null }}
+      # EXAMPLE EXPRESSIONS
+      # EX_TERNARY: ${{ github.ref == 'refs/heads/main' && 'main' || 'development' }}
+
     steps:
       - name: download artifact
         uses: actions/download-artifact@v4.1.7
         with:
           name: output-log-file # specify assigned artifact name to download
+  specific-test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'echo github ref'
+        run: echo ${{github.ref}}
+
+  # EXPRESSIONS - programatically set env variables in workflow files and access contexts
+  # commonly used with the `if` conditional to determine whether a step should run
+  # use the ${{}} syntax in the env section of your job to tell GH to evaluate an expression rather than a string
