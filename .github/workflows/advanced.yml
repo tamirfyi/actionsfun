@@ -82,12 +82,15 @@ jobs:
         uses: actions/download-artifact@v4.1.7
         with:
           name: output-log-file # specify assigned artifact name to download
-  specific-test-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'echo github ref'
-        run: echo ${{github.ref}}
 
   # EXPRESSIONS - programatically set env variables in workflow files and access contexts
   # commonly used with the `if` conditional to determine whether a step should run
   # use the ${{}} syntax in the env section of your job to tell GH to evaluate an expression rather than a string
+
+  expression-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'echo github ref'
+        # IF conditional is included for individual steps, not, jobs
+        if: ${{ github.ref == 'refs/head/feat/expression' }}
+        run: echo ${{github.ref}}
