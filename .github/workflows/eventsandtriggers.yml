@@ -3,8 +3,6 @@
 # Name your workflow
 name: events-and-triggers-workflow
 
-run-name: ${{ github.actor }} is learning action events and triggers
-
 # Define event triggers
 # - events can originate from github
 # - events can also run on a schedule
@@ -45,10 +43,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm i -g bats
-      - run: bats -v
-  docker-container-action:
-    runs-on: self-hosted
-    steps:
-      - name: first step
-        uses: docker://alpine:3.8
+      - name: install bats # new named step
+        run: npm i -g bats
+      - name: display bats version
+        run: bats -v
+      - name: test env variable
+        env:
+          VAR_STRING: 'this is a var string'
+        run: echo ${{ env.VAR_STRING }}
