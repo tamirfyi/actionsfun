@@ -48,7 +48,7 @@ jobs:
       - run: npm i -g bats
       - run: bats -v
   docker-container-action:
-    runs-on: docker://alpine:3.8
+    runs-on: self-hosted
     steps:
       - name: first step
         run: echo "hello alpine"
