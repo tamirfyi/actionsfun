@@ -101,11 +101,20 @@ jobs:
   trying-context:
     runs-on: ubuntu-latest
     env:
-      MY_VAR: this is my var
+      mascot: tamir
     steps:
-      - name: var context
-        run: echo my var = ${{env.MY_VAR}}
+      # ENV CONTEXT - variables that have been set in a workflow, job or step
+      # different from variables which are set at the organization, repository and environment levels
+      - run: echo 'Hi ${{ env.mascot }}' # Hi tamir
+      - run: echo 'Hi ${{ env.mascot }}' # Hi rimat
+        env:
+          mascot: rimat
       - name: github context
-        run: echo run number = ${{github.run_number}}
-      - name: secrets context
-        run: echo ${{secrets.GITHUB_TOKEN}}
+        if: ${{github.event_name == 'pull_request'}}
+        run: echo "running pull request ci"
+      # VAR CONTEXT - config cariables set at the repo, environment, or org levels
+      # if a configuration var has not been set, the return value is an empty string
+      - name: var context
+        run: echo ${{env.mascot}}
+        env:
+          mascot: ${{vars.MASCOT_NAME}}
