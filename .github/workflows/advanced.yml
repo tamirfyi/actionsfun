@@ -35,6 +35,10 @@ on:
   # special event to allow you to manually run an action
   workflow_dispatch:
 
+# ENV VARS for this workflow
+env:
+  DAY_OF_WEEK: Monday
+
 # JOB - a set of steps in a workflow executed on the same runner
 # - each step is either a shell script or action
 # - steps are executed in order and depend on each other
@@ -183,10 +187,29 @@ jobs:
   # INPUTS CONTEXT - contains input properties passed to an action, reusable workflo, or manually triggered workflow
   # reusable workflow inputs defined with `workflow_call` event in the event configuration
   # manually triggered workflow inputs defined in `workflow_dispatch` even in the event configuration
-
   input-deploy:
     runs-on: ubuntu-latest
     if: ${{ inputs.perform_deploy }}
     steps:
       - name: Deploy build to target
         run: echo "Deploying build:${{ inputs.build_id }} to target:${{ inputs.deploy_target }}"
+
+  # VARIABLES - provide way to store and reuse non-sensitive configuration info
+  # can store anything, and vars are interoplated on the runner machine running your workflow
+  # variables render unmasked in your build outputs; use secrets for sensitive information
+  # define variables at two levels:
+  # single workflow file = use the `env` key in the workflow file
+  # multiple workflow files - define it at the org, repo, or environment level
+
+  show-greeting:
+    runs-on: ubuntu-latest
+    # access env variables at the JOB level
+    env:
+      greeting: hello
+    steps:
+      - name: say hello its monday
+        # $DAY_OF_WEEK is defined at the WORKFLOW level
+        run: echo "$greeting $firstname, today is $DAY_OF_WEEK"
+        # access env variables at the STEP level
+        env:
+          firstname: zuma
