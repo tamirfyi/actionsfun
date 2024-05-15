@@ -201,6 +201,11 @@ jobs:
   # single workflow file = use the `env` key in the workflow file
   # multiple workflow files - define it at the org, repo, or environment level
 
+  # vars accessed with just $ are processed by the shell on the runner
+  # contexts accessed with ${{}} are processed by GH actions and sent to the runner
+
+  # cannot use default env variable names; will be ignored if you try to override them
+
   show-greeting:
     runs-on: ubuntu-latest
     # access env variables at the JOB level
@@ -213,3 +218,5 @@ jobs:
         # access env variables at the STEP level
         env:
           firstname: zuma
+      - name: list all env variables
+        run: env
