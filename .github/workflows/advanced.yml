@@ -19,6 +19,19 @@ on:
     branches:
       - 'main'
 
+  # REUSABLE INPUTS DEFINED HERE
+  workflow_call:
+    inputs:
+      build_id:
+        required: true
+        type: number
+      deploy_target:
+        required: true
+        type: string
+      perform_deploy:
+        required: true
+        type: boolean
+
   # special event to allow you to manually run an action
   workflow_dispatch:
 
@@ -166,3 +179,14 @@ jobs:
     steps:
       - name: start
         run: echo "failed to build and deploy"
+
+  # INPUTS CONTEXT - contains input properties passed to an action, reusable workflo, or manually triggered workflow
+  # reusable workflow inputs defined with `workflow_call` event in the event configuration
+  # manually triggered workflow inputs defined in `workflow_dispatch` even in the event configuration
+
+  input-deploy:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.perform_deploy }}
+    steps:
+      - name: Deploy build to target
+        run: echo "Deploying build:${{ inputs.build_id }} to target:${{ inputs.deploy_target }}"
