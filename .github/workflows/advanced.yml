@@ -94,3 +94,18 @@ jobs:
         # IF conditional is included for individual steps, not, jobs
         if: ${{ github.ref == 'refs/head/feat/expression' }}
         run: echo ${{github.ref}}
+
+  # CONTEXTS - way to access information about workflow runs, variables, runner envs, jobs, and steps
+  # each context is an object with properties that are strings or other objects
+
+  trying-context:
+    runs-on: alpine-latest
+    env:
+      MY_VAR: this is my var
+    steps:
+      - name: var context
+        run: echo my var = ${{env.MY_VAR}}
+      - name: github context
+        run: echo run number = ${{github.run_number}}
+      - name: secrets context
+        run: echo ${{secrets.GITHUB_TOKEN}}
