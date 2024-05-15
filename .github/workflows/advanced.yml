@@ -205,6 +205,13 @@ jobs:
   # contexts accessed with ${{}} are processed by GH actions and sent to the runner
 
   # cannot use default env variable names; will be ignored if you try to override them
+  # names can only contain alphanumeric characters or underscores
+  # must not start with `GITHUB_` prefix or number
+  # names are case insensitive
+  # must be unique at each level
+
+  # if a variable with the same name exists at multiple levels, the lower level takes precedence
+  # step => job => workflow => repo => environment => org
 
   show-greeting:
     runs-on: ubuntu-latest
@@ -214,6 +221,8 @@ jobs:
     steps:
       - name: say hello its monday
         # $DAY_OF_WEEK is defined at the WORKFLOW level
+        # ** you cannot use runner env variables ($var) in parts of a workflow that are processed by github actions and are not sent to the runner
+        # ** i.e., the if: conditional is processed by GHactions, so you should use ${{env.var}} instead of $var
         run: echo "$greeting $firstname, today is $DAY_OF_WEEK"
         # access env variables at the STEP level
         env:
