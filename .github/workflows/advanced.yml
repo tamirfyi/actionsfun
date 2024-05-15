@@ -131,6 +131,38 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
+          # specify the property from your matrix as needed
           node-version: ${{matrix.version}}
       - name: check node version
         run: node -v
+
+  # NEEDS CONTEXT - contains outputs from all jobs defined as a direct dependency of the current job
+  # doesn't include implicitly defined jobs (dependent jobs of a dependent job)
+  build:
+    runs-on: ubuntu-latest
+    # OUTPUT section - specify expected outputs
+    outputs:
+      # format = steps.<step_id>.outputs.<output_name>
+      build_id: ${{steps.build_step.outputs.build_id}}
+    steps:
+      - name: build
+        id: build_step
+        run: echo "build_id=$RANDOM" >> $GITHUB_OUTPUT
+
+  deploy:
+    # DEPENDENCY - specify previous job as dependency for this job
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # use the needs context here = needs.<dependency_name>.outputs.<output_name>
+      - run: echo "Deploying build ${{ needs.build.outputs.build_id }}"
+
+  debug:
+    # specify more dependencies
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    # returns true if any previous jobs fail
+    if: ${{failure()}}
+    steps:
+      - name: start
+        run: echo "failed to build and deploy"
