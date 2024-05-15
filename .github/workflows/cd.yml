@@ -29,3 +29,27 @@ jobs:
     steps:
       - name: deploy
         run: echo "deploying application"
+# DEPLOYING TO CLOUD
+# most cloud services provide a github action to upload some sort of app (i.e. azure/webapps-deploy)
+# flow seems to go like this:
+# build:
+# setup runtime,
+# build install & test
+# upload artifact
+# deploy:
+# set environment (specific branch patterns will upload to different environments)
+# download artifact from build job (make sure to include `needs: build`)
+# deploy to cloud provider
+
+# AWS is a bit more complicated; you need to configure AWS creditials, build tag & push image to ECR, then deploy a new ECS instance
+
+# SECURITY HARDENING
+# OpenID connect (OIDC) allows your workflows to exchange tokens directly from your cloud provider
+# in order to access cloud providers, github supplies the provider with credentials (username & password) that are typically stored as secrets
+#   * this requires you to create credentials in cloud provider and duplicate them in github as a secret
+# OIDC allows your workflow to request short-lived access tokens directly from the provider
+# your cloud provider must support OIDC
+# benefits:
+# - no cloud secrets
+# - authentication and authorization management
+# - rotating credentials
