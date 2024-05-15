@@ -118,3 +118,17 @@ jobs:
         run: echo ${{env.mascot}}
         env:
           mascot: ${{vars.MASCOT_NAME}}
+
+  # STRATEGY CONTEXT (MATRIX) - containts information about the matrix execution strategy for current job
+  # can use a matrix strategy to test your code in multiple version of a language or on multiple operatoring systems
+  trying-matrix:
+    runs-on: ubuntu-latest
+    # specify strategy here
+    strategy:
+      matrix:
+        version: ['19', '20', '21', '22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.version}}
