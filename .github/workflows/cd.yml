@@ -23,9 +23,9 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     # specifies which environment to use
-    environment: development
+    environment: production
     # specifies concurrency group so there will only be one running and one pending job/workflow in this group
-    concurrency: development
+    concurrency: production
     steps:
       - name: deploy
         run: echo "deploying application"
