@@ -132,3 +132,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{matrix.version}}
+      - name: check node version
+        run: node -v
