@@ -12,7 +12,6 @@ on:
 
 jobs:
   redis-container:
-    environment: development
     # specify linux based os for jobs using containers
     runs-on: ubuntu-latest
     # specify the docker hub image your container executes in
