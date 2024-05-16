@@ -6,6 +6,9 @@ name: container-workflow
 
 on:
   push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   redis-container:
