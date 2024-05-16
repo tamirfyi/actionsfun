@@ -1,0 +1,25 @@
+# SERVICE CONTAINERS - connect databases, web services, memory caches, and other tools to your workflow
+#   - configure containers for each job in a workflow, and gh will create a fresh docker container for each service
+#   - must use a linux runner
+#   - can also run jobs in a container, which communicate using Docker's bridge networks
+name: container-workflow
+
+on:
+  push:
+
+jobs:
+  redis-container:
+    # specify linux based os for jobs using containers
+    runs-on: ubuntu-latest
+    # specify the docker hub image your container executes in
+    container: node:latest
+    # specify a service named 'redis' using the redis image from docker hub
+    services:
+      redis:
+        image: redis
+        # specify the ports for redis to use if your job is running in a docker container
+        ports:
+          - 6379:6379
+    steps:
+      - name: ping redis container
+        run: redis-cli ping
