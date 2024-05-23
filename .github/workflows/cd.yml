@@ -1,0 +1,13 @@
+name: demo-deployment-workflow
+
+on:
+  push:
+    branches: ['main', 'development']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'build step'
+        run: echo test

@@ -28,7 +28,7 @@ jobs:
     concurrency: development
     steps:
       - name: deploy
-        run: echo "deploying application"
+        run: echo "deploying application"3
 # DEPLOYING TO CLOUD
 # most cloud services provide a github action to upload some sort of app (i.e. azure/webapps-deploy)
 # flow seems to go like this:
