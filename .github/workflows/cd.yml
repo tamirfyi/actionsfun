@@ -33,7 +33,7 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DEMO_HOST }}
-          # username: ${{ secrets.DEMO_USER }}
+          username: ${{ secrets.DEMO_USER }}
           # password: ${{ secrets.DEMO_PASS }}
           key: ${{ secrets.DEMO_SSH_KEY }}
           source: 'helloworld.sh'
