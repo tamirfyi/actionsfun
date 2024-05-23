@@ -9,16 +9,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 'build step'
-        run: |
-          echo "building horizon demo"
+      - name: 'create script'
+        run: echo 'echo "hello horizon team!"' > hellohorizon.sh
+      - name: turn script into executable
+        run: chmod +x hellohorizon.sh
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hello-horizon
+          path: hellohorizon.sh
 
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: check out repo
+      - name: checkout repo
         uses: actions/checkout@v4
-      - name: copy script via ssh password
+      - name: download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: hello-horizon
+          path: .
+      - name: copy script with scp
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DEMO_HOST }}
