@@ -10,4 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'build step'
-        run: echo test
+        run: |
+          echo "building horizon demo"
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repo
+        uses: actions/checkout@v4
+      - name: copy script via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEMO_HOST }}
+          username: ${{ secrets.DEMO_USER }}
+          password: ${{ secrets.DEMO_PASS }}
+          source: 'helloworld.sh'
+          target: '/root/horizon'
