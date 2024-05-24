@@ -19,8 +19,6 @@ jobs:
     steps:
       - name: 'create script'
         run: echo 'echo "hello horizon team!"' > helloworld.sh
-      - name: turn script into executable
-        run: chmod +x helloworld.sh
       - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -44,4 +42,4 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: helloworld.sh
-          target: /home/horizon/
+          target: /home/horizon/helloworld.sh
