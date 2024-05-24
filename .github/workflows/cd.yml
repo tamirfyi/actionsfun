@@ -42,6 +42,6 @@ jobs:
         with:
           host: ${{ secrets.HORIZON_SSH_HOST }}
           username: ${{ secrets.HORIZON_SSH_USER }}
-          key: ${{ secrets.HORIZON_SSH_KEY }}
+          key: ${{ secrets.MY_SSH_KEY }}
           source: helloworld.sh
           target: /home/horizon/
