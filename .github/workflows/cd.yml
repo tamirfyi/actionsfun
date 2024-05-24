@@ -41,7 +41,7 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HORIZON_SSH_HOST }}
-          username: ${{ secrets.HORIZON_SSH_USER }}
-          key: ${{ secrets.MY_SSH_KEY }}
+          username: root
+          key: ${{ secrets.MY_PRIVATE_KEY }}
           source: helloworld.sh
           target: /home/horizon/
