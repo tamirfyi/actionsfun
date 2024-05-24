@@ -41,5 +41,5 @@ jobs:
           host: ${{ secrets.HORIZON_SSH_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: helloworld.sh
-          target: /home/horizon/helloworld.sh
+          source: 'helloworld.sh'
+          target: /home/horizon/
