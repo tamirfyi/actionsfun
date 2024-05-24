@@ -42,4 +42,4 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: 'helloworld.sh'
-          target: /home/horizon/
+          target: /root/horizon/
