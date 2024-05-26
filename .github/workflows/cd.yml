@@ -65,11 +65,20 @@ jobs:
           name: nest-api-packagejson
           path: ./dist/package.json
 
-      - name: upload script to horizon devops server
+      - name: upload dist folder to horizon devops server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HORIZON_SSH_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'dist,package.json'
+          source: 'dist'
           target: /root/horizon/
+
+      - name: upload package json folder to horizon devops server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HORIZON_SSH_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: 'dist/package.json'
+          target: /root/horizon/package.json
