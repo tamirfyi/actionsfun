@@ -53,11 +53,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: download artifact
+      - name: download dist artifact
         uses: actions/download-artifact@v4
         with:
           name: nest-api-dist
           path: ./dist/
+
+      - name: download package json
+        uses: actions/download-artifact@v4
+        with:
+          name: nest-api-packagejson
+          path: ./dist/package.json
 
       - name: upload script to horizon devops server
         uses: appleboy/scp-action@master
