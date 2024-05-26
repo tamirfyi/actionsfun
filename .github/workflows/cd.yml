@@ -37,11 +37,17 @@ jobs:
         run: npm run build
         working-directory: nest-api
 
-      - name: upload artifact
+      - name: upload dist folder
         uses: actions/upload-artifact@v4
         with:
           name: nest-api-dist
           path: nest-api/dist
+
+      - name: upload package json
+        uses: actions/upload-artifact@v4
+        with:
+          name: nest-api-packagejson
+          path: nest-api/package.json
 
   deploy:
     runs-on: ubuntu-latest
@@ -59,5 +65,5 @@ jobs:
           host: ${{ secrets.HORIZON_SSH_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'dist'
+          source: 'dist,package.json'
           target: /root/horizon/
