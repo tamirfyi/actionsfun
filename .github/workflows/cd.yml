@@ -19,14 +19,24 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
-      - name: 'run test suite'
-        run: |
-          cd nest-api
-          npm run test
-      - name: 'build distribution folder'
-        run: |
-          cd nest-api
-          npm run build
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: install dependencies
+        run: npm ci
+        working-directory: nest-api
+
+      - name: run test suite
+        run: npm run test
+        working-directory: nest-api
+
+      - name: build distribution folder
+        run: npm run build
+        working-directory: nest-api
+
       - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -35,12 +45,14 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: download artifact
         uses: actions/download-artifact@v4
         with:
           name: nest-api-dist
           path: .
+
       - name: upload script to horizon devops server
         uses: appleboy/scp-action@master
         with:
