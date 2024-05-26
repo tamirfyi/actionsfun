@@ -43,7 +43,7 @@ jobs:
           name: nest-api-dist
           path: nest-api/dist
 
-      - name: upload package json
+      - name: upload package.json
         uses: actions/upload-artifact@v4
         with:
           name: nest-api-packagejson
@@ -59,11 +59,11 @@ jobs:
           name: nest-api-dist
           path: ./dist/
 
-      - name: download package json
+      - name: download package.json
         uses: actions/download-artifact@v4
         with:
           name: nest-api-packagejson
-          path: ./dist/package.json
+          path: ./package.json
 
       - name: upload dist folder to horizon devops server
         uses: appleboy/scp-action@master
@@ -74,11 +74,21 @@ jobs:
           source: 'dist'
           target: /root/horizon/
 
-      - name: upload package json folder to horizon devops server
+      - name: upload package.json to horizon devops server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HORIZON_SSH_HOST }}
-          username: root
+          username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'dist/package.json'
+          source: 'package.json'
           target: /root/horizon/package.json
+
+      - name: install dependencies on remote
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HORIZON_SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/horizon
+            npm install
