@@ -63,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nest-api-packagejson
-          path: ./package.json
+          path: .
 
       - name: upload dist folder to horizon devops server
         uses: appleboy/scp-action@master
@@ -71,8 +71,8 @@ jobs:
           host: ${{ secrets.HORIZON_SSH_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'dist/*'
-          target: /root/horizon/dist
+          source: 'dist'
+          target: /root/horizon/
 
       - name: upload package.json to horizon devops server
         uses: appleboy/scp-action@master
@@ -80,5 +80,5 @@ jobs:
           host: ${{ secrets.HORIZON_SSH_HOST }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: './package.json'
-          target: /root/horizon/package.json
+          source: 'package.json'
+          target: /root/horizon/
