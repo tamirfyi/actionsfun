@@ -43,11 +43,13 @@ jobs:
           name: nest-api-dist
           path: nest-api/dist
 
-      - name: upload package.json
+      - name: upload package files
         uses: actions/upload-artifact@v4
         with:
           name: nest-api-packagefiles
-          path: 'nest-api/package.json,nest-api/package-lock.json'
+          path: |
+            nest-api/package.json
+            nest-api/package-lock.json
 
   deploy:
     runs-on: ubuntu-latest
