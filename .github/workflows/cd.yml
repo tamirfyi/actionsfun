@@ -43,13 +43,11 @@ jobs:
           name: nest-api-dist
           path: nest-api/dist
 
-      - name: upload package files
+      - name: upload package.json
         uses: actions/upload-artifact@v4
         with:
-          name: nest-api-packagefiles
-          path: |
-            nest-api/package.json
-            nest-api/package-lock.json
+          name: nest-api-packagejson
+          path: nest-api/package.json
 
   deploy:
     runs-on: ubuntu-latest
@@ -61,10 +59,10 @@ jobs:
           name: nest-api-dist
           path: ./dist/
 
-      - name: download package files
+      - name: download package.json
         uses: actions/download-artifact@v4
         with:
-          name: nest-api-packagefiles
+          name: nest-api-packagejson
           path: .
 
       - name: upload dist folder to horizon devops server
