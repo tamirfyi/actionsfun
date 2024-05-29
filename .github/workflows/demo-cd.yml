@@ -1,0 +1,36 @@
+name: demo-cd-workflow
+
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: 'install project dependencies'
+        run: |
+          npm ci
+        working-directory: nest-api
+      - name: run testing suite
+        run: npm run test
+        working-directory: nest-api
+      - name: create build directory
+        run: npm run build
+        working-directory: nest-api
+      - name: upload dist folder artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nest-api-dist-folder
+          path: nest-api/dist
+      - name: upload package.json artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nest-api-packagejson
+          path: nest-api/package.json
