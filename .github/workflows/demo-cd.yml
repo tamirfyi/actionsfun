@@ -19,7 +19,7 @@ jobs:
           npm ci
         working-directory: nest-api
       - name: run testing suite
-        run: npm run test
+        run: npm run test:e2e
         working-directory: nest-api
       - name: create build directory
         run: npm run build

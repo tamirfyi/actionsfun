@@ -1,55 +1,84 @@
-# You can control deployments with github actions by
-# triggering workflows after events
-# configure environments to set rules before running a job
-# use concurrency to control number of deployments running at a time
+# Name your workflow
+name: demo-deployment-workflow
 
-name: cd-workflow
-
+# Specify when this workflow should trigger
 on:
   push:
-    branches:
-      - main
+    # This will only run when we make pushes on the main branch and development branch
+    branches: ['main', 'development']
+
+  # This lets us run the workflow manually through the GitHub actions page
   workflow_dispatch:
 
-# ENVIRONMENTS - used to describe a general deployment target like `production`, `staging` or `development`
-# environment is displayed on main page of repo if GHA deploys to it
-# can use environments to require approval for a job to proceed & other governance controls
-
-# CONCURRENCY - ensures a single job or workflow using the same concurrency group will run at a time
-# use concurrency to make sure an environment only has one deployment in progress and one in pending at a time
-# not connected to environment names
-
+# Specify the jobs in this workflow. Jobs we want to run
+# "Build and test"
+# "Deploy"
 jobs:
-  deployment:
+  build:
     runs-on: ubuntu-latest
-    # specifies which environment to use
-    environment: development
-    # specifies concurrency group so there will only be one running and one pending job/workflow in this group
-    concurrency: development
     steps:
-      - name: deploy
-        run: echo "deploying application"3
-# DEPLOYING TO CLOUD
-# most cloud services provide a github action to upload some sort of app (i.e. azure/webapps-deploy)
-# flow seems to go like this:
-# build:
-# setup runtime,
-# build install & test
-# upload artifact
-# deploy:
-# set environment (specific branch patterns will upload to different environments)
-# download artifact from build job (make sure to include `needs: build`)
-# deploy to cloud provider
+      - name: checkout repo
+        uses: actions/checkout@v4
 
-# AWS is a bit more complicated; you need to configure AWS creditials, build tag & push image to ECR, then deploy a new ECS instance
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
 
-# SECURITY HARDENING
-# OpenID connect (OIDC) allows your workflows to exchange tokens directly from your cloud provider
-# in order to access cloud providers, github supplies the provider with credentials (username & password) that are typically stored as secrets
-#   * this requires you to create credentials in cloud provider and duplicate them in github as a secret
-# OIDC allows your workflow to request short-lived access tokens directly from the provider
-# your cloud provider must support OIDC
-# benefits:
-# - no cloud secrets
-# - authentication and authorization management
-# - rotating credentials
+      - name: install dependencies
+        run: npm ci
+        working-directory: nest-api
+
+      - name: run test suite
+        run: npm run test
+        working-directory: nest-api
+
+      - name: build distribution folder
+        run: npm run build
+        working-directory: nest-api
+
+      - name: upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: nest-api-dist
+          path: nest-api/dist
+
+      - name: upload package.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: nest-api-packagejson
+          path: nest-api/package.json
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nest-api-dist
+          path: ./dist/
+
+      - name: download package.json
+        uses: actions/download-artifact@v4
+        with:
+          name: nest-api-packagejson
+          path: .
+
+      - name: upload dist folder to horizon devops server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HORIZON_SSH_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: 'dist'
+          target: /root/horizon/
+
+      - name: upload package.json to horizon devops server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HORIZON_SSH_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: 'package.json'
+          target: /root/horizon/
